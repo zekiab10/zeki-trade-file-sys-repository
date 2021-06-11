@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="bb28eba3-7e1a-412f-9faa-06af9a7914b5" file="config/${env}.properties" />
+	<configuration doc:name="Configuration" doc:id="295194d5-8686-49ce-92ca-9052dea853db" defaultErrorHandler-ref="globalError_Handler" />
+	<error-handler name="globalError_Handler" doc:id="d3c3ba29-791a-479f-a2cf-38dc98030e5e" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="dd45aa6b-521c-417a-8d3e-efd13e20772e" >
+			<ee:transform doc:name="set error payload" doc:id="1cd6405e-5e26-413d-bb5b-da3fccb104ae" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "error.occured",
+	error:{
+		describtion: error.describtion,
+		errorType: errror.errorType.asString
+		
+	}
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+</mule>
